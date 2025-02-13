@@ -5,28 +5,22 @@ function App() {
   const formDataRef = useRef(new FormData());
 
   const uploadFile = (e) => {
-    e.preventDefault();
+    const file = e.target.files[0];
+    formDataRef.current.append("file", file);
 
-    let files = e.target.files;
+    setImages((prevImage) => [...prevImage, URL.createObjectURL(file)]);
 
-    if (!files.length) return;
-
-    const formData = new FormData();
-    let images = [];
-
-    for (let i = 0; i < files.length; i++) {
-      formData.append("images", files[i]); // 백엔드 요청용
-      images.push(URL.createObjectURL(files[i])); // 미리보기 전용
+    for (let [key, value] of formDataRef.current.entries()) {
+      console.log(`${key}: ${value}`);
     }
-
-    formDataRef.current = formData;
-
-    setImages(images);
   };
 
   return (
     <form>
-      <input type="file" multiple onChange={uploadFile} />
+      <input type="file" onChange={uploadFile} />
+      <input type="file" onChange={uploadFile} />
+      <input type="file" onChange={uploadFile} />
+
       <br />
       <div>
         {images.map((img, idx) => (
